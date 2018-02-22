@@ -1,0 +1,120 @@
+body{
+    background-color:rgb(34, 34, 34);
+    
+}
+
+.fighterCard {
+    display: flex;
+    justify-content: space-around;
+    background-blend-mode: lighten;
+    border: 4px inset slategray;
+    height: 200px;
+    background-image: url('../images/bricks.png');
+    background-size: 100%;
+    opacity: 0.8;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+
+.fighterCard:hover {
+    opacity: 1;
+}
+
+.fighterPic {
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.fighterName, .gameMessage, .fighterNameArena {
+    /* text-shadow: 2px 2px 3px red, -2px -2px 15px black; */
+    text-shadow: 0 0 3px gray, -0.5px -0.5px 0px black, 0.5px 0.5px 0px white ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'metal mania', 'permanent marker', 'bungee inline';
+    background-image: url('../images/cinder.png');
+    background-position: center;
+    /* background-size: 100% 100%; */
+    /* color: rgb(71, 15, 15); */
+    color: transparent;
+    border: 4px gray outset;
+}
+
+.gameMessage {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    font-size: 5vw;
+    width: 100%;
+    background-size: 80%;
+}
+
+.fighterName, .fighterNameArena{
+    background-size: 100% ;
+}
+
+.arena {
+    position: relative;
+    margin: 20px auto 20px auto;
+    width: 800px;
+    height: 600px;
+    margin: auto;
+    background-position: center;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    
+}
+
+.healthbar1, .healthbar2{
+    height: 30px;
+    width: 40%;
+    background-color: red;
+    position: absolute;
+}
+.name1, .name2{
+    height: 30px;
+    width: auto;
+    background-color: brown;
+    position: absolute;
+    top: 40px;
+}
+.fighter1, .fighter2 {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    bottom: 50px;
+    margin: 30px 100px;
+    object-fit: contain;
+    max-width: 100%;
+
+}
+
+.healthbar1, .name1, .fighter1 {
+    left: 0px;
+}
+
+.healthbar2, .name2, .fighter2 {
+    right: 0px;
+}
+
+.fighter2 {
+    transform: scaleX(-1);
+}
+
+#attack {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+
+.boom1, .boom2 {
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    text-align: center;
+    background-color: green;
+}
