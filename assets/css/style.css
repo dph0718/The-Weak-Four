@@ -66,21 +66,25 @@ body{
     background-position: center;
     background-size: 100% 100%;
     background-repeat: no-repeat;
+    justify-content: center;
     
 }
 
 .healthbar1, .healthbar2{
     height: 30px;
-    width: 40%;
-    background-color: red;
+    width: 300px;
+    background: linear-gradient(rgb(255, 165, 165), red, rgb(26, 2, 2));
     position: absolute;
+    top: 50px;
 }
 .name1, .name2{
     height: 30px;
+    font-size: 26px;
+    padding: 5px;
     width: auto;
     background-color: brown;
     position: absolute;
-    top: 40px;
+    top: 90px;
 }
 .fighter1, .fighter2 {
     width: 200px;
@@ -107,14 +111,15 @@ body{
 
 #attack {
     position: absolute;
-    left: 50%;
     top: 50%;
 }
 
 .boom1, .boom2 {
+    font-family: 'metal mania';
+    font-size: 20px;
     position: absolute;
     top: 40%;
-    width: 100%;
+    width: 50%;
     text-align: center;
-    background-color: green;
+    background-color: rgb(73, 116, 73);
 }

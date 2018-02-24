@@ -8,9 +8,15 @@
 //  [x]     replace with skull when defeated.
 //  [ ]     put .fighterName under <img> within .fighterCard, flex display as column. see if that works.
 //  [ ]     HTML: Font link: Link to "metal mania" instead of "bungee inline"
-// []       find out why when blanka attacks and damage < 100, it still defeats.
-// []       and why it doesn't say you defeated everyone
 // []       make wins increase just once per opponent defeat.
+// [x]      attack button faded when "tired"
+// [x]      math.floor the attack amounts.
+//  [  ]    style the gameMessage a little better. no, it's the .boom1, not gameMessage
+//--------------------For these, the p1.hit(p2) is being called twice.... debug that.
+// []           find out why when blanka attacks and damage < 100, it still defeats.
+// []           and why it doesn't say you defeated everyone -- because wins increases by 2 each time???
+//  [ ]         what the hell is the health bar doing? it goes down when they dodge. debug the health bar or the ##'s of the hit function.
+//maybe for this one, log the player's hp as a thing on the arena screen instead of a health bar.
 
 
 //Object constructor for the Fighter object type
@@ -29,12 +35,12 @@ function randomNum(x) {
 
 //calculates the hit strength based on the attacker's attack value
 function hitStrength(attacker) {
-    return attacker.attack - Math.floor((randomNum(6) * 0.1 * attacker.attack));
+    return Math.floor(attacker.attack) - Math.floor((randomNum(6) * 0.1 * attacker.attack));
 }
 
 //calculates the block strength based on the defender's defense value
 function blockStrength(defender) {
-    return defender.defense - Math.floor((randomNum(6) * 0.1 * defender.defense));
+    return Math.floor(defender.defense) - Math.floor((randomNum(6) * 0.1 * defender.defense));
 }
 
 //subtracts from the defender's hp, based on calculated hit strength & block strength
@@ -43,26 +49,56 @@ function blockStrength(defender) {
 Fighter.prototype.hit = function (defender) {
     var hitAmount = hitStrength(this);
     var blockAmount = blockStrength(defender);
-
+    var hitSound;
+    var attackSound;
     if (hitAmount > blockAmount) {
-        console.log(defender.name + " hp-before: " + defender.hp);
         defender.hp -= (hitAmount - blockAmount);
         this.attack += hitAmount / 5;
         defender.defense += blockAmount / 5;
-        console.log("hit: " + hitAmount);
-        console.log("block: " + blockAmount);
-        console.log(defender.name + " hp-after: " + defender.hp);
+        if (this == vader) {
+            attackSound = new Audio('./assets/sounds/lightsaber.mp3');
+        } else {
+            attackSound = new Audio('./assets/sounds/punch1.mp3');
+        }
+        hitSound = new Audio('./assets/sounds/grunt.mp3');
+        attackSound.play();
+        setTimeout(function () { hitSound.play() }, 100);
         //alert the user about how much damage was done, change health bar
         $('.boom1').html(this.name + " attacked " + defender.name + " for " + (hitAmount - blockAmount) + ' damage!');
         $('.healthbar1').width(300 * (p1.hp / 100) + 'px');
         $('.healthbar2').width(300 * (p2.hp / 100) + 'px');
+        var defeatSound;
+        var winSound;
+        var loseSound;
         if (p1.hp < 0) {
-            var lose = new Audio('./assets/sounds/youlose.mp3');
-            lose.play();
+            if (p1 == tire) {
+                defeatSound = new Audio('./assets/sounds/hubcap.mp3');
+                defeatSound.play();
+            }
+            if (p2 == vader) {
+                setTimeout(function () {
+                    loseSound = new Audio('./assets/sounds/vader.mp3');
+                    loseSound.play();
+
+                }, 1000)
+            } else {
+                loseSound = new Audio('./assets/sounds/youlose.mp3');
+                loseSound.play();
+            }
             setTimeout(function () {
                 $('.boom1').html("You lose.");
             }, 2000);
         } else if (p2.hp < 0) {
+            wins++;
+            if (p2 == tire) {
+                defeatSound = new Audio('./assets/sounds/hubcap.mp3');
+                defeatSound.play();
+            } if (p1 == vader) {
+                setTimeout(function () {
+                    loseSound = new Audio('./assets/sounds/vader.mp3');
+                    loseSound.play();
+                }, 1000)
+            }
             setTimeout(function () {
                 $('.boom1').html("You defeated " + p2.name + "!");
                 p2.defeated = true;
@@ -73,14 +109,25 @@ Fighter.prototype.hit = function (defender) {
                 enableSelect();
             }, 2000);
             setTimeout(function () {
-                window.scrollTo(0, 0);
-                if(wins >= 5){
+                document.querySelector('.gameMessage').scrollIntoView({
+                    behavior: 'smooth'
+                })
+                $('.boom1').html("");
+                if (wins >= 5) {
                     $('.gameMessage').html("You have defeated everyone.");
+                    var ahhSound = new Audio('./assets/sounds/ahh.mp3');
+                    ahhSound.play();
                 }
             }, 4000);
         }
-        console.log("p1: " + p1.hp, "p2: " + p2.hp, p2.hp / 100);
+        console.log("attacker: " + this.hp, "defender: " + defender.hp, defender.hp / 100);
     } else {
+        if (this == vader) {
+            attackSound = new Audio('./assets/sounds/lightsaber.mp3');
+        } else {
+            attackSound = new Audio('./assets/sounds/swoosh.mp3');
+        }
+        attackSound.play();
         console.log("hit: " + hitAmount);
         console.log("block: " + blockAmount);
         $('.boom1').html(defender.name + " dodged " + this.name + "'s attack!");
@@ -90,7 +137,7 @@ Fighter.prototype.hit = function (defender) {
 //hit code end================================================================================================================
 
 //list of the fighters
-var vader = new Fighter("Darth Vader", 10, 10, 100);
+var vader = new Fighter("Darth Vader", 100, 10, 100);
 var blanka = new Fighter("Blanka", 100, 5, 100);
 var wahlberg = new Fighter("Mark Wahlberg", 10, 15, 100);
 var tire = new Fighter("Big-O", 10, 10, 100);
@@ -156,12 +203,9 @@ Fighter.prototype.select = function () {
 function enableSelect() {
     $('.fighterPic').on('click', function () {
         if (p2Selected == true) {
-            console.log("nothing else is gonna happen. except this.");
             return;
         } else if (p1Selected == false) {
             p1 = fighterArray[this.index];
-            console.log(this.index);
-            console.log(p1.name);
             $('.gameMessage').text("Choose your Opponent");
             p1Selected = true;
             fighterArray.splice(this.index, 1);
@@ -175,7 +219,6 @@ function enableSelect() {
         } else if (p1Selected == true) {
             if (fighterArray[this.index].defeated == false) {
                 p2 = fighterArray[this.index];
-                console.log(p2.name);
                 $(this).css('opacity', '0.7');
                 $(this).parent().css('border', '3px orange solid');
                 p2Selected = true;
@@ -185,19 +228,23 @@ function enableSelect() {
                 $('.fighter1').attr('src', p1.photo);
                 $('.fighter2').attr('src', p2.photo);
                 $('.gameMessage').text("Begin the Battle");
-                $('.arena').css('visibility', 'visible');
+                $('.arena').css('display', 'flex');
                 $('.arena').css('background-image', 'url("./assets/images/background.png")');
-                enableAttack();
+                setTimeout(function () {
+                    document.querySelector('.arena').scrollIntoView({
+                        behavior: 'smooth'
+                    })
+                }, 1000)
+
             } else if (fighterArray[this.index].defeated == true) {
                 $('.gameMessage').html(fighterArray[this.index].name + " has been defeated.");
             }
-
         }
     })
 }
 
 function hideArena() {
-    $('.arena').css('visibility', 'hidden');
+    $('.arena').css('display', 'none');
 }
 function enableAttack() {
     var tired = false;
@@ -205,25 +252,30 @@ function enableAttack() {
         if (p1.hp > 0 && p2.hp > 0 && tired == false) {
             p1.hit(p2);
             tired = true;
+            $('#attack').css('opacity', '0.4');
             if (p2.hp > 0) {
                 setTimeout(function () {
-                    console.log("now, counterattack:");
                     p2.hit(p1);
+                    $('#attack').css('opacity', '1');
                     tired = false;
                 }, 2000);
-
+            } else if (p2.hp <= 0) {
+                tired = false;
+                $('#attack').css('opacity', '1');
             }
         } else {
             return;
         }
     })
-    document.onkeydown = function() {
+    document.onkeydown = function () {
         console.log(wins);
     }
 }
 
 //puts the fighter pictures up on window load. and lets them be clicked.
 window.onload = function () {
+    window.scrollTo(0, 0);
+
     popPics();
     enableSelect();
     hideArena();
