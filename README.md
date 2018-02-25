@@ -1,3 +1,5 @@
+# [The Weak Four](https://dph0718.github.io/week-4-game/)
+
 Choose a character.<br>
 Choose your opponent.<br>
 Hit the attack button. Again and again until you win or lose.<br>
