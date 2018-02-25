@@ -1,5 +1,5 @@
-Choose a character.
-Choose your opponent.
-Hit the attack button. Again and again until you win or lose.
-If you win, you get to choose your next opponent. 
-If you lose, you are told as much and the game is over.
+Choose a character.<br>
+Choose your opponent.<br>
+Hit the attack button. Again and again until you win or lose.<br>
+If you win, you get to choose your next opponent. <br>
+If you lose, you are told as much and the game is over.<br>
