@@ -6,12 +6,12 @@
 //  [x]     select opponent, remove from array, pop on arena
 //  [x]     add logic for win, lose
 //  [x]     replace with skull when defeated.
-//  [x]     put .fighterName under <img> within .fighterCard, flex display as column. see if that works.
+//  [ ]     put .fighterName under <img> within .fighterCard, flex display as column. see if that works.
 //  [x]     HTML: Font link: Link to "metal mania" instead of "bungee inline"
 //  [x]       make wins increase just once per opponent defeat.
 //  [x]      attack button faded when "tired"
 //  [x]      math.floor the attack amounts.
-//  [ ]    style the gameMessage a little better. no, it's the .boom1, not gameMessage
+//  [ ]    style the gameMessage a little better. no, it's the .boom1, not .gameMessage
 //--[x]---------------For these, the p1.hit(p2) is being called twice.... debug that.
 //  [x]           find out why when blanka attacks and damage < 100, it still defeats.
 //  [x]           and why it doesn't say you defeated everyone -- because wins increases by 2 each time???
@@ -43,7 +43,8 @@ function blockStrength(defender) {
 }
 
 //subtracts from the defender's hp, based on calculated hit strength & block strength
-//also adds defense xp to defender and attack xp to attacker
+//also adds defense xp and attack xp to user (but not opponent)
+//includes some punch, grunt, lightsaber, and hubcap sounds
 //Hit code===================================================================================================================
 Fighter.prototype.hit = function (defender) {
     var hitAmount = hitStrength(this);
@@ -125,7 +126,6 @@ Fighter.prototype.hit = function (defender) {
                     $('.gameMessage').html("You have defeated everyone.");
                     var ahhSound = new Audio('./assets/sounds/ahh.mp3');
                     ahhSound.play();
-
                 }
             }, 4000);
         }
@@ -152,6 +152,7 @@ var wahlberg = new Fighter("Mark Wahlberg", 22, 20, 100);
 var tire = new Fighter("Big-O", 16, 15, 200);
 var walterWhite = new Fighter("Walter White", 30, 20, 70);
 var subzero = new Fighter("Sub-Zero", 30, 20, 100);
+
 //assigning their pictures
 vader.pic = 'url(./assets/images/vader.png)';
 blanka.pic = 'url(./assets/images/blanka.png)';
@@ -170,6 +171,7 @@ subzero.photo = './assets/images/sub-zero.png';
 //array of the fighers
 fighterArray = [vader, blanka, wahlberg, tire, walterWhite, subzero]
 
+//declares variables for storing p1 and opponent objects. And the 'win' counter.
 var p1;
 var p2;
 var wins = 0;
@@ -194,21 +196,11 @@ function popPics() {
     })
 }
 
+//variables for determining if the user has selected a player and an opponent
 var p1Selected = false;
 var p2Selected = false;
 
-Fighter.prototype.select = function () {
-    if (p1selected == false) {
-        p1 = this;
-        $('.gameMessage').html("Choose your Opponent");
-        p1Selected = true;
-        console.log(p1);
-    } else if (p1Selected == true) {
-        p2 = this;
-        p2Selected = true;
-    }
-}
-
+//logic for player selection, opponent selection, removes selected opponent from array of available opponents, puts the healthbars on the arena
 function enableSelect() {
     $('.fighterPic').on('click', function () {
         if (p2Selected == true) {
@@ -218,9 +210,6 @@ function enableSelect() {
             $('.gameMessage').text("Choose your Opponent");
             p1Selected = true;
             fighterArray.splice(this.index, 1);
-            //put in <divs> for the arena space: health bar/hp, p1 picture, p2 picture.
-            //reassign the div's <img src within this function
-            // or create a duplicate fighterPic element?? appendTo()? append()?
             $('.fighterCard').last().remove();
             $('.fighterName').last().remove();
             $('.fighterName').html("");
@@ -244,7 +233,6 @@ function enableSelect() {
                         behavior: 'smooth'
                     })
                 }, 1000)
-
             } else if (fighterArray[this.index].defeated == true) {
                 $('.gameMessage').html(fighterArray[this.index].name + " has been defeated.");
             }
@@ -252,9 +240,12 @@ function enableSelect() {
     })
 }
 
+//hides the arena...
 function hideArena() {
     $('.arena').css('display', 'none');
 }
+
+//times the attack/counterattack; gussies up the attack button to reflect if user can attack
 function enableAttack() {
     var tired = false;
     $('#attack').click(function () {
@@ -276,9 +267,6 @@ function enableAttack() {
             return;
         }
     })
-    document.onkeydown = function () {
-        console.log(wins);
-    }
 }
 
 //puts the fighter pictures up on window load. and lets them be clicked.
@@ -290,7 +278,3 @@ window.onload = function () {
     hideArena();
     enableAttack();
 }
-
-
-//add to the hit method:
-    //p2selected = false, p2 or p1.defeated = true, re-pop Pics, re-enable select function, 
