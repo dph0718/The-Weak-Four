@@ -47,10 +47,10 @@ function blockStrength(defender) {
 //includes some punch, grunt, lightsaber, and hubcap sounds
 //Hit code===================================================================================================================
 Fighter.prototype.hit = function (defender) {
-    var hitAmount = hitStrength(this);
-    var blockAmount = blockStrength(defender);
-    var hitSound;
-    var attackSound;
+    const hitAmount = hitStrength(this);
+    const blockAmount = blockStrength(defender);
+    const hitSound;
+    const attackSound;
     if (hitAmount > blockAmount) {
         var damage = (hitAmount - blockAmount);
         defender.hp -= damage;
