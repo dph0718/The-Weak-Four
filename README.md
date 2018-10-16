@@ -1,4 +1,4 @@
-# [The Weak Four](https://dph0718.github.io/week-4-game/)
+# [The Weak Four](https://dph0718.github.io/The-Weak-Four/)
 
 Choose a character.<br>
 Choose your opponent.<br>
