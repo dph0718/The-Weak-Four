@@ -1,5 +1,6 @@
 # [The Weak Four](https://dph0718.github.io/The-Weak-Four/)
 
+## Using this app:
 Choose a character.<br>
 Choose your opponent.<br>
 Hit the attack button. Again and again until you win or lose.<br>
